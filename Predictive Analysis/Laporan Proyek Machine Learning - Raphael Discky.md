@@ -61,8 +61,8 @@ train_scaled = sc.fit_transform(train)
 ```
 ## Modeling
 #### Menggunakan model LSTM 
-- Kelebihannya adalah LSTM lebih akurat ketika menggunakan dataset dengan sequences yang lebih panjang
-- Kekurangannya adalah LSTM lebih complex dan lambat dibandingkan dengan GRU karena memiliki 3 gates
+- Kelebihannya adalah LSTM lebih akurat ketika menggunakan dataset dengan sequences yang lebih panjang dibandingkan dengan GRU. Selain itu LSTM memiliki lebih banyak parameter daripada GRU sehingga dapat mempelajari hipotesis yang lebih kompleks.
+- Kekurangannya adalah LSTM lebih kompleks dan lambat dibandingkan dengan GRU karena memiliki 3 gates, yaitu input gate, forget gate, dan output gate. Selain itu dropout jauh lebih sulit untuk diterapkan di LSTM, sensitif terhadap inisialisasi bobot acak yang berbeda, membutuhkan lebih banyak memori untuk dilatih, dan mudah overfit.
 - Hyperparameter tuning dilakukan dengan mendiagnosis jumlah epoch dan membanding hasilnya dengan jumlah epoch yang lain
 
 Pada proyek summary dari model LSTM yang digunakan adalah sebagai berikut:
@@ -72,9 +72,12 @@ Model LSTM dilatih dengan menggunakan optimizer adam dan loss yang digunakan ada
 Hasil pelatihan model adalah sebagai berikut:
 ![LSTM model](https://i.ibb.co/3TFXL14/Screenshot-2021-11-07-144731.png)
 
+Plot untuk loss terhadap epoch menggunakan MSE pada model LSTM:
+![LSTM model](https://i.ibb.co/8bWfR5Q/Screenshot-2021-11-09-153443.png)
+
 #### Menggunakan GRU
-- Kelebihannya adalah GRU lebih cepat dibandingkan LSTM karena hanya memiliki 2 gates saja
-- Kekurangannya adalah GRU kurang akurat dibandingkan dengan LSTM
+- Kelebihannya adalah GRU lebih cepat dibandingkan LSTM karena hanya memiliki 2 gates saja, update gate dan reset gate. Gate ini memutuskan informasi apa yang diizinkan melalui output dan dapat dilatih untuk menyimpan informasi dari jauh ke belakang. Hal ini memungkinkan untuk menyampaikan informasi yang relevan untuk membuat prediksi yang lebih baik. Selain itu GRU mengatasi masalah gradien yang hilang (nilai yang digunakan untuk memperbarui bobot jaringan). Jika grading menyusut dari waktu ke waktu karena menyebar kembali, mungkin menjadi terlalu kecil untuk mempengaruhi pembelajaran, sehingga membuat jaringan saraf tidak dapat dilatih.
+- Kekurangannya adalah GRU kurang akurat dibandingkan dengan LSTM. Walaupun performa GRU akan mengungguli LSTM pada skenario teks panjang dan dataset kecil, GRU akan kalah dengan LSTM pada skenario lainnya.
 - Hyperparameter tuning dilakukan dengan mendiagnosis jumlah epoch dan membanding hasilnya dengan jumlah epoch yang lain
 
 Pada proyek summary dari model GRU yang digunakan adalah sebagai berikut:
@@ -85,15 +88,18 @@ Hasil pelatihan model adalah sebagai berikut:
 
 ![GRU model](https://i.ibb.co/ZVfsr4L/Screenshot-2021-11-07-144745.png)
 
-#### Membandingkan Hasil MSE dari Kedua Model
-##### Model LSTM
-![LSTM model](https://i.ibb.co/qggF12X/Screenshot-2021-11-07-145230.png)
-##### Model GRU
-![LSTM model](https://i.ibb.co/r79vVGc/Screenshot-2021-11-07-145259.png)
+Plot untuk loss terhadap epoch menggunakan MSE pada model GRU:
+![GRU model](https://i.ibb.co/LpyHmZH/Screenshot-2021-11-09-153501.png)
+
+Berikut ini hasil loss pelatihan model antara LSTM dan GRU menggunakan metriks evaluasi MSE:
+| LSTM      | GRU |
+| ----------- | ----------- |
+| loss: 8.3698e-04     | loss: 0.0018     |
+
+## Evaluation
 
 Dari hasil kedua model tersebut dapat disimpulkan bahwa solusi yang terbaik adalah menggunakan model LSTM karena memiliki nilai MSE yang lebih rendah dibandingkan jika menggunakan model GRU.
 
-## Evaluation
 Metriks evaluasi menggunakan MSE (Mean Squared Error). Metode Mean Squared Error secara umum digunakan untuk mengecek estimasi berapa nilai kesalahan pada peramalan. Nilai Mean Squared Error yang rendah atau nilai mean squared error mendekati nol menunjukkan bahwa hasil peramalan sesuai dengan data aktual dan bisa dijadikan untuk perhitungan peramalan di periode mendatang.
 
 Cara kerja  Mean Squared Error (MSE) adalah dengan melakukan pengurangan nilai data aktual dengan data peramalan dan hasilnya dikuadratkan (squared) kemudian dijumlahkan secara keseluruhan dan membaginya dengan banyaknya data yang ada. 
@@ -104,10 +110,16 @@ At = nilai Aktual permintaan
 Ft = nilai hasil peramalan
 n = banyaknya data
 
+#### Membandingkan Hasil MSE dari Kedua Model
+##### Model LSTM
+![LSTM model](https://i.ibb.co/gTzp2x3/Screenshot-2021-11-09-153518.png)
+##### Model GRU
+![LSTM model](https://i.ibb.co/CKTsq1x/Screenshot-2021-11-09-153531.png)
+
 Berikut ini hasil dari pelatihan model antara LSTM dan GRU menggunakan metriks evaluasi MSE:
 | LSTM      | GRU |
 | ----------- | ----------- |
-| loss: 8.3698e-04     | loss: 0.0018     |
+| MSE: 20.13662867291743     | MSE: 27.99973978309572     |
 
-Hasil proyek menggunakan model LSTM mendapatkan loss sebesar 8.3698e-04, sedangkan jika menggunakan model GRU mendapatkan loss sebesar 0.0018. Karena loss dari LSTM lebih kecil dibandingkan dengan GRU maka bisa disimpulkan jika model LSTM memiliki akurasi yang lebih tinggi untuk prediksi harga saham IBM.
+Hasil proyek menggunakan model LSTM mendapatkan nilai MSE sebesar 20.13662867291743, sedangkan jika menggunakan model GRU mendapatkan nilai MSE sebesar 27.99973978309572. Karena nilai MSE dari LSTM lebih kecil dibandingkan dengan GRU maka bisa disimpulkan jika model LSTM memiliki akurasi yang lebih tinggi untuk prediksi harga saham IBM.
 

@@ -107,7 +107,13 @@ model.summary()
 """Model LSTM dilatih dengan menggunakan optimizer adam dan loss yang digunakan adalah MSE, epoch sebanyak 20 dan batch size 32."""
 
 model.compile(optimizer = 'adam', loss = 'mean_squared_error')
-model.fit(X_train, y_train, epochs = 20, batch_size = 32);
+history = model.fit(X_train, y_train, epochs = 20, batch_size = 32);
+
+plt.plot(history.history['loss'])
+plt.title('Model loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.show()
 
 """**Melakukan Prediksi**"""
 
@@ -130,13 +136,11 @@ X_test = np.stack(X_test)
 predict = model.predict(X_test)
 predict = sc.inverse_transform(predict)
 
-"""**Hasil MSE, MAE, RSME dari perbedaan antara prediksi dengan test**"""
+"""**Hasil MSE dari perbedaan antara prediksi dengan test**"""
 
 diff = predict - test
 
 print("MSE:", np.mean(diff**2))
-print("MAE:", np.mean(abs(diff)))
-print("RMSE:", np.sqrt(np.mean(diff**2)))
 
 """**Memvisualisasikan hasil prediksi harga saham IBM dengan harga saham aslinya dengan metode LSTM**"""
 
@@ -175,18 +179,22 @@ modelGRU.summary()
 """Model GRU dilatih dengan menggunakan optimizer sgd dan loss yang digunakan adalah MSE, epoch sebanyak 20 dan batch size 32."""
 
 modelGRU.compile(optimizer='sgd', loss='mean_squared_error')
-modelGRU.fit(X_train, y_train, epochs=20, batch_size=32)
+history = modelGRU.fit(X_train, y_train, epochs=20, batch_size=32)
+
+plt.plot(history.history['loss'])
+plt.title('Model loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.show()
 
 predict = modelGRU.predict(X_test)
 predict = sc.inverse_transform(predict)
 
-"""**Hasil MSE, MAE, RSME dari perbedaan antara prediksi dengan test**"""
+"""**Hasil MSE dari perbedaan antara prediksi dengan test**"""
 
 diff = predict - test
 
 print("MSE:", np.mean(diff**2))
-print("MAE:", np.mean(abs(diff)))
-print("RMSE:", np.sqrt(np.mean(diff**2)))
 
 """**Memvisualisasikan hasil prediksi harga saham IBM dengan harga saham aslinya dengan metode GRU**"""
 
